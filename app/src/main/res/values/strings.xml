@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">@string/weather</string>
+    <string name="forecast_fragment_label">@string/weather</string>
+    <string name="weather">Weather</string>
+</resources>

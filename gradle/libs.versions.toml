@@ -1,0 +1,14 @@
+[versions]
+gradlePlugin = "7.3.0"
+kotlin = "1.7.10"
+rxjava = "3.1.5"
+retrofit = "2.9.0"
+
+[libraries]
+rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "gradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

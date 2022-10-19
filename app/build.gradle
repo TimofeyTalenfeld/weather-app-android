@@ -1,6 +1,7 @@
 plugins {
     alias libs.plugins.android.application
     alias libs.plugins.kotlin.android
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
 }
 
 android {
@@ -42,8 +43,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation libs.rxjava
-    implementation libs.retrofit
+    implementation libs.bundles.rx
+    implementation libs.bundles.retrofit
+    implementation libs.kotlinx.serialization.json
+    implementation libs.gms.services.location
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

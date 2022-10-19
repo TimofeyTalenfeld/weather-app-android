@@ -1,12 +1,28 @@
 [versions]
 gradlePlugin = "7.3.0"
 kotlin = "1.7.10"
-rxjava = "3.1.5"
+rxjava = "2.2.21"
+rxandroid = "2.1.1"
 retrofit = "2.9.0"
+okhttpLoggingInterceptor = "4.10.0"
+gmsServicesLocation = "21.0.0"
+kotlinxAdapterFactory = "0.8.0"
+rxAdapterFactory = "2.5.0"
+kotlinxSerializationJson = "1.4.1"
 
 [libraries]
-rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
+rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroid" }
+gms-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "gmsServicesLocation" }
+retrofit-lib = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+kotlinx-adapter-factory = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "kotlinxAdapterFactory" }
+rx-adapter-factory = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "rxAdapterFactory" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttpLoggingInterceptor" }
+
+[bundles]
+rx = ["rxjava", "rxandroid"]
+retrofit = ["retrofit-lib", "kotlinx-adapter-factory", "rx-adapter-factory", "okhttp-logging-interceptor"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradlePlugin" }

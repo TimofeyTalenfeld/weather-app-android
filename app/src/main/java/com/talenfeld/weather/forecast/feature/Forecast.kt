@@ -1,6 +1,7 @@
 package com.talenfeld.weather.forecast.feature
 
 import com.talenfeld.weather.core.feature.Feature
+import com.talenfeld.weather.main.data.model.Region
 
 typealias ForecastFeature = Feature<Forecast.Msg, Forecast.State, Forecast.Eff>
 
@@ -11,11 +12,14 @@ object Forecast {
             enum class GrantStatus { GRANTED, DENIED, REQUEST_DENIED }
         }
         object OnErrorRetryClicked: Msg()
+
+        class OnRegionFound(val region: Region): Msg()
+        object OnLoadingFailed: Msg()
     }
 
     sealed class Eff {
         object RequestLocationPermission: Eff()
-        object FindLocation: Eff()
+        object FindRegion: Eff()
     }
 
     sealed class State {
@@ -35,6 +39,8 @@ object Forecast {
     fun reducer(msg: Msg, state: State): Pair<State, Set<Eff>> = when (msg) {
         is Msg.OnLocationPermissionResult -> onLocationResult(msg, state)
         is Msg.OnErrorRetryClicked -> onErrorRetryClicked(state)
+        is Msg.OnRegionFound -> onRegionFound(msg, state)
+        is Msg.OnLoadingFailed -> onLoadingFailed()
     }
 
     private fun onLocationResult(
@@ -42,7 +48,7 @@ object Forecast {
         state: State
     ): Pair<State, Set<Eff>> = when (msg.grantStatus) {
         Msg.OnLocationPermissionResult.GrantStatus.GRANTED -> {
-            state to setOf(Eff.FindLocation)
+            state to setOf(Eff.FindRegion)
         }
         Msg.OnLocationPermissionResult.GrantStatus.DENIED -> {
             State.Error(State.Error.Cause.GEO_PERMISSION_NEEDED) to emptySet()
@@ -53,7 +59,7 @@ object Forecast {
     }
 
     private fun onErrorRetryClicked(state: State): Pair<State, Set<Eff>> {
-        val errorState = state as State.Error
+        val errorState = state as? State.Error ?: return state to emptySet()
         return when (errorState.cause) {
             State.Error.Cause.GEO_PERMISSION_NEEDED -> {
                 State.Loading to setOf(Eff.RequestLocationPermission)
@@ -62,8 +68,15 @@ object Forecast {
                 state to emptySet()
             }
             State.Error.Cause.LOADING_FAILED -> {
-                State.Loading to setOf(Eff.FindLocation)
+                State.Loading to setOf(Eff.FindRegion)
             }
         }
     }
+
+    private fun onRegionFound(msg: Msg.OnRegionFound, state: State): Pair<State, Set<Eff>> {
+        return state to emptySet()
+    }
+
+    private fun onLoadingFailed(): Pair<State, Set<Eff>> =
+        State.Error(State.Error.Cause.LOADING_FAILED) to emptySet()
 }

@@ -20,6 +20,7 @@ import com.talenfeld.weather.core.ui.adapter.base.DiffAdapter
 import com.talenfeld.weather.databinding.FragmentForecastBinding
 import com.talenfeld.weather.forecast.di.ForecastFactory
 import com.talenfeld.weather.forecast.feature.Forecast
+import com.talenfeld.weather.forecast.ui.adapter.LocationCardAdapter
 
 class ForecastFragment : Fragment() {
 
@@ -32,7 +33,8 @@ class ForecastFragment : Fragment() {
 
     private val diffAdapter = DiffAdapter(
         LoadingAdapter(),
-        ErrorAdapter(onRetryClicked = { feature.accept(Forecast.Msg.OnErrorRetryClicked) })
+        ErrorAdapter(onRetryClicked = { feature.accept(Forecast.Msg.OnErrorRetryClicked) }),
+        LocationCardAdapter()
     )
 
     private val requestLocationPermissionLauncher =

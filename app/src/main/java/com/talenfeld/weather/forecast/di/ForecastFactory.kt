@@ -1,13 +1,15 @@
 package com.talenfeld.weather.forecast.di
 
+import android.content.Context
 import com.talenfeld.weather.core.di.FeatureFactory
 import com.talenfeld.weather.core.feature.SimpleFeature
 import com.talenfeld.weather.core.feature.effectHandler
 import com.talenfeld.weather.forecast.feature.Forecast
 import com.talenfeld.weather.forecast.feature.ForecastFeature
-import com.talenfeld.weather.forecast.feature.LocationEffectHandler
+import com.talenfeld.weather.forecast.feature.ForecastNetworkEffectHandler
 import com.talenfeld.weather.forecast.ui.ForecastViewModelFactory
 import com.talenfeld.weather.main.data.repository.IAndroidLocationRepository
+import com.talenfeld.weather.main.data.repository.IForecastRepository
 import com.talenfeld.weather.main.data.repository.ILocationRepository
 
 class ForecastFactory(
@@ -18,16 +20,19 @@ class ForecastFactory(
         initialState = Forecast.State.Loading,
         reducer = Forecast::reducer
     ).effectHandler(
-        effectHandler = LocationEffectHandler(
+        effectHandler = ForecastNetworkEffectHandler(
             locationRepository = dependencies.locationRepository,
-            androidLocationRepository = dependencies.androidLocationRepository
+            androidLocationRepository = dependencies.androidLocationRepository,
+            forecastRepository = dependencies.forecastRepository
         )
     )
 
-    val viewModelFactory = ForecastViewModelFactory()
+    val viewModelFactory = ForecastViewModelFactory(dependencies.context)
 
     interface Dependencies {
+        val context: Context
         val locationRepository: ILocationRepository
         val androidLocationRepository: IAndroidLocationRepository
+        val forecastRepository: IForecastRepository
     }
 }

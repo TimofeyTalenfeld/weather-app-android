@@ -1,6 +1,7 @@
 package com.talenfeld.weather.forecast.feature
 
 import com.talenfeld.weather.core.feature.Feature
+import com.talenfeld.weather.main.data.model.ForecastResult
 import com.talenfeld.weather.main.data.model.Region
 
 typealias ForecastFeature = Feature<Forecast.Msg, Forecast.State, Forecast.Eff>
@@ -15,11 +16,17 @@ object Forecast {
 
         class OnRegionFound(val region: Region): Msg()
         object OnLoadingFailed: Msg()
+
+        class OnForecastLoaded(
+            val forecastResult: ForecastResult,
+            val region: Region
+        ): Msg()
     }
 
     sealed class Eff {
         object RequestLocationPermission: Eff()
         object FindRegion: Eff()
+        class LoadForecast(val region: Region): Eff()
     }
 
     sealed class State {
@@ -34,6 +41,11 @@ object Forecast {
                 LOADING_FAILED
             }
         }
+
+        data class Loaded(
+            val region: Region,
+            val forecastResult: ForecastResult
+        ): State()
     }
 
     fun reducer(msg: Msg, state: State): Pair<State, Set<Eff>> = when (msg) {
@@ -41,6 +53,7 @@ object Forecast {
         is Msg.OnErrorRetryClicked -> onErrorRetryClicked(state)
         is Msg.OnRegionFound -> onRegionFound(msg, state)
         is Msg.OnLoadingFailed -> onLoadingFailed()
+        is Msg.OnForecastLoaded -> onForecastLoaded(msg)
     }
 
     private fun onLocationResult(
@@ -73,10 +86,12 @@ object Forecast {
         }
     }
 
-    private fun onRegionFound(msg: Msg.OnRegionFound, state: State): Pair<State, Set<Eff>> {
-        return state to emptySet()
-    }
+    private fun onRegionFound(msg: Msg.OnRegionFound, state: State): Pair<State, Set<Eff>> =
+        state to setOf(Eff.LoadForecast(msg.region))
 
     private fun onLoadingFailed(): Pair<State, Set<Eff>> =
         State.Error(State.Error.Cause.LOADING_FAILED) to emptySet()
+
+    private fun onForecastLoaded(msg: Msg.OnForecastLoaded): Pair<State, Set<Eff>> =
+        State.Loaded(msg.region, msg.forecastResult) to emptySet()
 }

@@ -9,4 +9,6 @@
     <string name="permission_needed">We need to know your location to show relevant weather for you</string>
     <string name="permission_needed_from_settings">We need to know your location to show relevant weather for you.\nFor using app, go to Settings and grant location Permission</string>
     <string name="loading_error_happened">Error loading data :(\nPlease try later</string>
+
+    <string name="celsius_temperature_1d">%d°C</string>
 </resources>

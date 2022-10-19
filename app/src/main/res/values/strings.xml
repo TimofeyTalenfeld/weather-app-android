@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">@string/weather</string>
-    <string name="forecast_fragment_label">@string/weather</string>
     <string name="weather">Weather</string>
+
+    <!-- error strings -->
+    <string name="retry">Retry</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="permission_needed">We need to know your location to show relevant weather for you</string>
+    <string name="permission_needed_from_settings">We need to know your location to show relevant weather for you.\nFor using app, go to Settings and grant location Permission</string>
+    <string name="loading_error_happened">Error loading data :(\nPlease try later</string>
 </resources>

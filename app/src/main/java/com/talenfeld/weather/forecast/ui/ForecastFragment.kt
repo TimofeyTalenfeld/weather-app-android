@@ -9,9 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.talenfeld.weather.core.di.components
 import com.talenfeld.weather.core.feature.bindFeature
+import com.talenfeld.weather.core.ui.adapter.ErrorAdapter
+import com.talenfeld.weather.core.ui.adapter.LoadingAdapter
+import com.talenfeld.weather.core.ui.adapter.base.DiffAdapter
 import com.talenfeld.weather.databinding.FragmentForecastBinding
 import com.talenfeld.weather.forecast.di.ForecastFactory
 import com.talenfeld.weather.forecast.feature.Forecast
@@ -23,16 +28,26 @@ class ForecastFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val featureFactory: ForecastFactory by lazy { components.forecastRef() }
+    private val feature by lazy { featureFactory.feature }
+
+    private val diffAdapter = DiffAdapter(
+        LoadingAdapter(),
+        ErrorAdapter(onRetryClicked = { feature.accept(Forecast.Msg.OnErrorRetryClicked) })
+    )
 
     private val requestLocationPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted: Boolean ->
-            featureFactory.feature.accept(Forecast.Msg.OnLocationPermissionResult(granted))
+            val grantStatus = when {
+                granted -> Forecast.Msg.OnLocationPermissionResult.GrantStatus.GRANTED
+                else -> Forecast.Msg.OnLocationPermissionResult.GrantStatus.DENIED
+            }
+            feature.accept(Forecast.Msg.OnLocationPermissionResult(grantStatus))
         }
 
     init {
-        bindFeature(featureFactory.feature, ::renderState, ::handleEffect)
+        bindFeature(feature, ::renderState, ::handleEffect)
     }
 
     override fun onCreateView(
@@ -46,6 +61,12 @@ class ForecastFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(binding.toolbar)
+        setupRecycler(binding.list)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
     override fun onDestroyView() {
@@ -54,11 +75,11 @@ class ForecastFragment : Fragment() {
     }
 
     private fun renderState(state: Forecast.State) {
-
+        val viewModel = featureFactory.viewModelFactory.create(state)
+        diffAdapter.swapData(viewModel.listItems)
     }
 
     private fun handleEffect(eff: Forecast.Eff) = when (eff) {
-        is Forecast.Eff.CheckLocationPermission -> requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
         else -> Unit
     }
 
@@ -69,7 +90,18 @@ class ForecastFragment : Fragment() {
         ) == PackageManager.PERMISSION_GRANTED
         when {
             granted -> {
-                featureFactory.feature.accept(Forecast.Msg.OnLocationPermissionResult(true))
+                feature.accept(
+                    Forecast.Msg.OnLocationPermissionResult(
+                        Forecast.Msg.OnLocationPermissionResult.GrantStatus.GRANTED
+                    )
+                )
+            }
+            shouldShowRequestPermissionRationale(permission).not() -> {
+                feature.accept(
+                    Forecast.Msg.OnLocationPermissionResult(
+                        Forecast.Msg.OnLocationPermissionResult.GrantStatus.REQUEST_DENIED
+                    )
+                )
             }
             else -> requestLocationPermissionLauncher.launch(permission)
         }
@@ -78,5 +110,10 @@ class ForecastFragment : Fragment() {
     private fun setupToolbar(toolbar: MaterialToolbar) {
         toolbar.setNavigationOnClickListener {
         }
+    }
+
+    private fun setupRecycler(recyclerView: RecyclerView): Unit = with(recyclerView) {
+        adapter = diffAdapter
+        layoutManager = LinearLayoutManager(context)
     }
 }

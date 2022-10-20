@@ -30,6 +30,24 @@ abstract class AsyncEffectHandler<Effect, Msg> : EffectHandler<Effect, Msg> {
     abstract fun invoke(eff: Effect, listener: (Msg) -> Unit): Disposable
 }
 
+abstract class SyncEffectHandler<Effect, Msg> : EffectHandler<Effect, Msg> {
+    private var listener: ((Msg) -> Unit)? = null
+
+    override fun dispose() {
+        listener = null
+    }
+
+    override fun invoke(eff: Effect) {
+        listener?.let { invoke(eff, it) }
+    }
+
+    override fun subscribe(listener: (Msg) -> Unit) {
+        this.listener = listener
+    }
+
+    abstract fun invoke(eff: Effect, listener: (Msg) -> Unit)
+}
+
 fun <Msg : Any, State : Any, Effect : Any> Feature<Msg, State, Effect>.effectHandler(
     effectHandler: EffectHandler<Effect, Msg>,
     initialEffects: Set<Effect> = emptySet()

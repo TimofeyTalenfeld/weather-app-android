@@ -4,8 +4,10 @@ import android.content.Context
 import com.talenfeld.weather.core.di.FeatureFactory
 import com.talenfeld.weather.core.feature.SimpleFeature
 import com.talenfeld.weather.core.feature.effectHandler
+import com.talenfeld.weather.core.navigation.Navigator
 import com.talenfeld.weather.forecast.feature.Forecast
 import com.talenfeld.weather.forecast.feature.ForecastFeature
+import com.talenfeld.weather.forecast.feature.ForecastNavigationEffectHandler
 import com.talenfeld.weather.forecast.feature.ForecastNetworkEffectHandler
 import com.talenfeld.weather.forecast.ui.ForecastViewModelFactory
 import com.talenfeld.weather.main.data.repository.IAndroidLocationRepository
@@ -25,6 +27,8 @@ class ForecastFactory(
             androidLocationRepository = dependencies.androidLocationRepository,
             forecastRepository = dependencies.forecastRepository
         )
+    ).effectHandler(
+        effectHandler = ForecastNavigationEffectHandler(dependencies.navigator)
     )
 
     val viewModelFactory = ForecastViewModelFactory(dependencies.context)
@@ -34,5 +38,6 @@ class ForecastFactory(
         val locationRepository: ILocationRepository
         val androidLocationRepository: IAndroidLocationRepository
         val forecastRepository: IForecastRepository
+        val navigator: Navigator
     }
 }

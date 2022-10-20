@@ -22,12 +22,19 @@ object Forecast {
             val forecast: ForecastCompilation,
             val region: Region
         ): Msg()
+
+        object OnNavMenuClicked: Msg()
     }
 
     sealed class Eff {
         object RequestLocationPermission: Eff()
+
+        // network effects
         object FindRegion: Eff()
         class LoadForecast(val region: Region): Eff()
+
+        // navigation effects
+        object OpenLocations: Eff()
     }
 
     sealed class State {
@@ -55,6 +62,7 @@ object Forecast {
         is Msg.OnRegionFound -> onRegionFound(msg, state)
         is Msg.OnLoadingFailed -> onLoadingFailed()
         is Msg.OnForecastLoaded -> onForecastLoaded(msg)
+        is Msg.OnNavMenuClicked -> onNavMenuClicked(state)
     }
 
     private fun onLocationResult(
@@ -95,4 +103,7 @@ object Forecast {
 
     private fun onForecastLoaded(msg: Msg.OnForecastLoaded): Pair<State, Set<Eff>> =
         State.Loaded(msg.region, msg.forecast) to emptySet()
+
+    private fun onNavMenuClicked(state: State): Pair<State, Set<Eff>> =
+        state to setOf(Eff.OpenLocations)
 }

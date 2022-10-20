@@ -122,6 +122,7 @@ class ForecastFragment : Fragment() {
 
     private fun setupToolbar(toolbar: MaterialToolbar) {
         toolbar.setNavigationOnClickListener {
+            feature.accept(Forecast.Msg.OnNavMenuClicked)
         }
     }
 

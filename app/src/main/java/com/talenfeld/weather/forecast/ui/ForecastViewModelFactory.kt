@@ -6,6 +6,8 @@ import com.talenfeld.weather.core.ui.ComparableItem
 import com.talenfeld.weather.core.ui.adapter.ErrorViewModel
 import com.talenfeld.weather.core.ui.adapter.GalleryViewModel
 import com.talenfeld.weather.core.ui.adapter.LoadingViewModel
+import com.talenfeld.weather.core.ui.getConditionIconResId
+import com.talenfeld.weather.core.ui.getTemperatureLabel
 import com.talenfeld.weather.core.util.ISO_DAY_FORMAT
 import com.talenfeld.weather.core.util.ISO_TIME_FORMAT
 import com.talenfeld.weather.forecast.feature.Forecast
@@ -74,7 +76,7 @@ class ForecastViewModelFactory(
         }
         return LocationCardViewModel(
             locationName = state.region.name,
-            temperatureText = getTemperatureLabel(state.forecast.currentWeather.temperature),
+            temperatureText = context.getTemperatureLabel(state.forecast.currentWeather.temperature),
             conditionIconResId = getConditionIconResId(state.forecast.currentWeather.condition),
             conditionAnimationResId = conditionAnimResId
         )
@@ -87,7 +89,7 @@ class ForecastViewModelFactory(
             return HourlyForecastViewModel(
                 time = time,
                 conditionIconResId = getConditionIconResId(weather.condition),
-                temperature = getTemperatureLabel(weather.temperature)
+                temperature = context.getTemperatureLabel(weather.temperature)
             )
         }
 
@@ -124,17 +126,6 @@ class ForecastViewModelFactory(
                 temperature = temperature
             )
         }
-
-    private fun getConditionIconResId(condition: Condition): Int = when (condition) {
-        Condition.CLEAR -> R.drawable.ic_sun
-        Condition.CLOUDY -> R.drawable.ic_cloud
-        Condition.RAINY -> R.drawable.ic_rain
-    }
-
-    private fun getTemperatureLabel(temperature: Float): String {
-        val roundedTemperature = round(temperature).toInt()
-        return context.getString(R.string.celsius_temperature_1d, roundedTemperature)
-    }
 
     private fun parseISODate(
         isoTime: String,

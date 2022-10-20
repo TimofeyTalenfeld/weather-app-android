@@ -1,25 +1,22 @@
 package com.talenfeld.weather.main.di
 
 import android.content.Context
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.talenfeld.weather.core.navigation.ActivityNavigator
+import android.content.SharedPreferences
+import com.talenfeld.weather.core.data.repository.CacheRepository
 import com.talenfeld.weather.core.navigation.Navigator
+import com.talenfeld.weather.forecast.data.repository.ForecastByLocations
+import com.talenfeld.weather.forecast.data.repository.ForecastCacheRepository
 import com.talenfeld.weather.main.data.api.AccessKeyInterceptor
 import com.talenfeld.weather.main.data.api.ForecastApi
 import com.talenfeld.weather.main.data.api.GeocodingApi
 import com.talenfeld.weather.main.data.api.configureApi
 import com.talenfeld.weather.main.data.repository.*
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 class MainProviderImpl(
     override val context: Context,
-    override val navigator: Navigator
+    override val navigator: Navigator,
+    sharedPreferences: SharedPreferences
 ): MainProvider {
 
     override val geocodingApi: GeocodingApi by lazy {
@@ -46,6 +43,13 @@ class MainProviderImpl(
 
     override val forecastRepository: IForecastRepository by lazy {
         ForecastRepository(forecastApi)
+    }
+
+    override val forecastCacheRepository: CacheRepository<ForecastByLocations> by lazy {
+        ForecastCacheRepository(
+            sharedPreferences = sharedPreferences,
+            json = Json
+        )
     }
 
     companion object {

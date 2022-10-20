@@ -2,6 +2,7 @@ package com.talenfeld.weather
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.talenfeld.weather.core.navigation.ActivityNavigator
@@ -17,7 +18,8 @@ class WeatherApplication: Application() {
         COMPONENTS = Components(
             MainProviderImpl(
                 context = baseContext,
-                navigator = navigator
+                navigator = navigator,
+                sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
             )
         )
     }
@@ -58,5 +60,7 @@ class WeatherApplication: Application() {
 
     companion object {
         lateinit var COMPONENTS: Components
+
+        private const val SHARED_PREFS_NAME = "default"
     }
 }

@@ -29,7 +29,6 @@ import com.talenfeld.weather.forecast.ui.adapter.LocationCardAdapter
 class ForecastFragment : Fragment() {
 
     private var _binding: FragmentForecastBinding? = null
-
     private val binding get() = _binding!!
 
     private val featureFactory: ForecastFactory by lazy { components.forecastRef() }

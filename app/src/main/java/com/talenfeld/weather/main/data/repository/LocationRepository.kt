@@ -2,7 +2,6 @@ package com.talenfeld.weather.main.data.repository
 
 import com.talenfeld.weather.main.data.api.GeocodingApi
 import com.talenfeld.weather.main.data.model.Location
-import com.talenfeld.weather.main.data.model.Point
 import com.talenfeld.weather.main.data.model.Region
 import io.reactivex.Single
 

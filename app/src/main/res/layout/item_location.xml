@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="@dimen/default_padding"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/location"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        tools:text="Saint-Petersburg"/>
+
+    <ImageView
+        android:id="@+id/condition_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        tools:src="@drawable/ic_sun"/>
+
+    <TextView
+        android:id="@+id/current_temperature"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        tools:text="21°C"/>
+
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/time"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="14:00"/>
+
+    <ImageView
+        android:id="@+id/condition_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginVertical="8dp"
+        tools:src="@drawable/ic_sun"/>
+
+    <TextView
+        android:id="@+id/temperature"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="22°C"/>
+
+</LinearLayout>

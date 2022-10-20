@@ -15,11 +15,13 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.talenfeld.weather.core.di.components
 import com.talenfeld.weather.core.feature.bindFeature
 import com.talenfeld.weather.core.ui.adapter.ErrorAdapter
+import com.talenfeld.weather.core.ui.adapter.GalleryAdapter
 import com.talenfeld.weather.core.ui.adapter.LoadingAdapter
 import com.talenfeld.weather.core.ui.adapter.base.DiffAdapter
 import com.talenfeld.weather.databinding.FragmentForecastBinding
 import com.talenfeld.weather.forecast.di.ForecastFactory
 import com.talenfeld.weather.forecast.feature.Forecast
+import com.talenfeld.weather.forecast.ui.adapter.HourlyForecastAdapter
 import com.talenfeld.weather.forecast.ui.adapter.LocationCardAdapter
 
 class ForecastFragment : Fragment() {
@@ -34,7 +36,8 @@ class ForecastFragment : Fragment() {
     private val diffAdapter = DiffAdapter(
         LoadingAdapter(),
         ErrorAdapter(onRetryClicked = { feature.accept(Forecast.Msg.OnErrorRetryClicked) }),
-        LocationCardAdapter()
+        LocationCardAdapter(),
+        GalleryAdapter(HourlyForecastAdapter())
     )
 
     private val requestLocationPermissionLauncher =

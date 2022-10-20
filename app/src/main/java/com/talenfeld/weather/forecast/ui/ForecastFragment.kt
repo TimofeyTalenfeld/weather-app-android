@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.talenfeld.weather.R
 import com.talenfeld.weather.core.di.components
 import com.talenfeld.weather.core.feature.bindFeature
 import com.talenfeld.weather.core.ui.adapter.ErrorAdapter
@@ -21,6 +22,7 @@ import com.talenfeld.weather.core.ui.adapter.base.DiffAdapter
 import com.talenfeld.weather.databinding.FragmentForecastBinding
 import com.talenfeld.weather.forecast.di.ForecastFactory
 import com.talenfeld.weather.forecast.feature.Forecast
+import com.talenfeld.weather.forecast.ui.adapter.DailyForecastAdapter
 import com.talenfeld.weather.forecast.ui.adapter.HourlyForecastAdapter
 import com.talenfeld.weather.forecast.ui.adapter.LocationCardAdapter
 
@@ -37,7 +39,11 @@ class ForecastFragment : Fragment() {
         LoadingAdapter(),
         ErrorAdapter(onRetryClicked = { feature.accept(Forecast.Msg.OnErrorRetryClicked) }),
         LocationCardAdapter(),
-        GalleryAdapter(HourlyForecastAdapter())
+        GalleryAdapter(
+            delegateAdapter = HourlyForecastAdapter(),
+            horizontalPaddingResId = R.dimen.default_half_padding
+        ),
+        DailyForecastAdapter()
     )
 
     private val requestLocationPermissionLauncher =

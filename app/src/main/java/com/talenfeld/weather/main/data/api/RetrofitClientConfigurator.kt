@@ -8,6 +8,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import java.util.concurrent.TimeUnit
+
+private const val CONNECT_TIMEOUT = 15L
 
 @OptIn(ExperimentalSerializationApi::class)
 fun <T> configureApi(
@@ -29,6 +32,8 @@ fun <T> configureApi(
             OkHttpClient.Builder()
                 .okhttpClientBuilder()
                 .addInterceptor(loggingInterceptor)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .build()
         )
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))

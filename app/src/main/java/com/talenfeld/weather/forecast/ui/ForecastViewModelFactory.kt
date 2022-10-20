@@ -6,13 +6,16 @@ import com.talenfeld.weather.core.ui.ComparableItem
 import com.talenfeld.weather.core.ui.adapter.ErrorViewModel
 import com.talenfeld.weather.core.ui.adapter.GalleryViewModel
 import com.talenfeld.weather.core.ui.adapter.LoadingViewModel
+import com.talenfeld.weather.core.util.ISO_DAY_FORMAT
+import com.talenfeld.weather.core.util.ISO_TIME_FORMAT
 import com.talenfeld.weather.forecast.feature.Forecast
+import com.talenfeld.weather.forecast.ui.adapter.DailyForecastViewModel
 import com.talenfeld.weather.forecast.ui.adapter.HourlyForecastViewModel
 import com.talenfeld.weather.forecast.ui.adapter.LocationCardViewModel
 import com.talenfeld.weather.main.data.model.Condition
 import com.talenfeld.weather.main.data.model.ForecastCompilation
 import com.talenfeld.weather.main.data.model.Weather
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 import java.util.*
 import kotlin.math.round
 
@@ -60,7 +63,7 @@ class ForecastViewModelFactory(
             listOf(
                 createLocationCard(state),
                 createHourlyForecast(state.forecast)
-            )
+            ).plus(createDailyForecast(state.forecast))
         )
 
     private fun createLocationCard(state: Forecast.State.Loaded): LocationCardViewModel {
@@ -78,9 +81,8 @@ class ForecastViewModelFactory(
     }
 
     private fun createHourlyForecast(forecast: ForecastCompilation): GalleryViewModel {
-
         fun createHourlyForecastItem(weather: Weather.AtMoment): ComparableItem {
-            val calendar = parseISOTime(weather.isoTime)
+            val calendar = parseISODate(weather.isoTime, ISO_TIME_FORMAT)
             val time = context.getString(R.string.hour_time_1d, calendar.get(Calendar.HOUR_OF_DAY))
             return HourlyForecastViewModel(
                 time = time,
@@ -91,9 +93,37 @@ class ForecastViewModelFactory(
 
         return GalleryViewModel(
             id = HOURLY_FORECAST_GALLERY_ID,
-            items = forecast.hourlyForecast.map(::createHourlyForecastItem)
+            items = forecast.hourlyForecast
+                .filter { weather ->
+                    val weatherCalendar = parseISODate(weather.isoTime, ISO_TIME_FORMAT)
+                    val currentCalendar = Calendar.getInstance()
+                    weatherCalendar.timeInMillis > currentCalendar.timeInMillis
+                }
+                .take(MAX_HOURLY_ITEMS)
+                .map(::createHourlyForecastItem)
         )
     }
+
+    private fun createDailyForecast(forecast: ForecastCompilation): List<ComparableItem> =
+        forecast.dailyForecast.take(MAX_DAILY_ITEMS).map { dailyForecast ->
+
+            val dayOfWeek = parseISODate(dailyForecast.isoTime, ISO_DAY_FORMAT)
+                .get(Calendar.DAY_OF_WEEK) - 1
+
+            val dayOfWeekLabel = context.resources.getStringArray(R.array.day_of_week)[dayOfWeek]
+
+            val temperature = context.getString(
+                R.string.max_min_temperature_1d_2d,
+                round(dailyForecast.temperatureMax).toInt(),
+                round(dailyForecast.temperatureMin).toInt()
+            )
+
+            DailyForecastViewModel(
+                day = dayOfWeekLabel,
+                conditionIconResId = getConditionIconResId(dailyForecast.condition),
+                temperature = temperature
+            )
+        }
 
     private fun getConditionIconResId(condition: Condition): Int = when (condition) {
         Condition.CLEAR -> R.drawable.ic_sun
@@ -106,12 +136,16 @@ class ForecastViewModelFactory(
         return context.getString(R.string.celsius_temperature_1d, roundedTemperature)
     }
 
-    private fun parseISOTime(isoTime: String): Calendar = Calendar.getInstance().apply {
-        time = ISO_TIME_FORMAT.parse(isoTime)
+    private fun parseISODate(
+        isoTime: String,
+        format: DateFormat
+    ): Calendar = Calendar.getInstance().apply {
+        time = format.parse(isoTime)
     }
 
     companion object {
-        private val ISO_TIME_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
         private const val HOURLY_FORECAST_GALLERY_ID = "hourly_forecast"
+        private const val MAX_HOURLY_ITEMS = 24
+        private const val MAX_DAILY_ITEMS = 7
     }
 }

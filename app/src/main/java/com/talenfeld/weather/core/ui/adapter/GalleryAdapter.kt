@@ -19,7 +19,8 @@ data class GalleryViewModel(
 }
 
 class GalleryAdapter(
-    delegateAdapter: DelegateAdapter
+    delegateAdapter: DelegateAdapter,
+    private val horizontalPaddingResId: Int
 ): SimpleDelegateAdapter<GalleryViewModel, ItemGalleryBinding>(GalleryViewModel::class.java) {
 
     private val diffAdapter = DiffAdapter(delegateAdapter)
@@ -31,6 +32,10 @@ class GalleryAdapter(
         binding.galleryList.run {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = diffAdapter
+
+            val horizontalPaddingPx = resources.getDimension(horizontalPaddingResId).toInt()
+            setPadding(horizontalPaddingPx, 0, horizontalPaddingPx, 0)
+            clipToPadding = false
         }
     }
 

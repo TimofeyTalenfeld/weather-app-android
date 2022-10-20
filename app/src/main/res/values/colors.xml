@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="sun_color">#ffcf48</color>
+    <color name="cloud_color">#ecf0f1</color>
 </resources>

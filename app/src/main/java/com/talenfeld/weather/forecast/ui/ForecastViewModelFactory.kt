@@ -7,6 +7,7 @@ import com.talenfeld.weather.core.ui.adapter.ErrorViewModel
 import com.talenfeld.weather.core.ui.adapter.LoadingViewModel
 import com.talenfeld.weather.forecast.feature.Forecast
 import com.talenfeld.weather.forecast.ui.adapter.LocationCardViewModel
+import com.talenfeld.weather.main.data.model.Condition
 import kotlin.math.round
 
 class ForecastViewModel(
@@ -54,10 +55,17 @@ class ForecastViewModelFactory(
         )
 
     private fun createLocationCard(state: Forecast.State.Loaded): LocationCardViewModel {
-        val currentTemperature = round(state.forecastResult.hourly.temperature.first()).toInt()
+        val currentTemperature = round(state.forecast.currentWeather.temperature).toInt()
+        val (conditionIconResId, conditionAnimResId) = when (state.forecast.currentWeather.condition) {
+            Condition.CLEAR -> R.drawable.ic_sun to R.anim.sun_animation
+            Condition.CLOUDY -> R.drawable.ic_cloud to R.anim.cloud_animation
+            Condition.RAINY -> R.drawable.ic_rain to R.anim.rain_animation
+        }
         return LocationCardViewModel(
             locationName = state.region.name,
-            temperatureText = context.getString(R.string.celsius_temperature_1d, currentTemperature)
+            temperatureText = context.getString(R.string.celsius_temperature_1d, currentTemperature),
+            conditionIconResId = conditionIconResId,
+            conditionAnimationResId = conditionAnimResId
         )
     }
 }

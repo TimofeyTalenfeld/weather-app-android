@@ -42,8 +42,15 @@ class ForecastFragment : Fragment() {
             ActivityResultContracts.RequestPermission()
         ) { granted: Boolean ->
             val grantStatus = when {
-                granted -> Forecast.Msg.OnLocationPermissionResult.GrantStatus.GRANTED
-                else -> Forecast.Msg.OnLocationPermissionResult.GrantStatus.DENIED
+                granted -> {
+                    Forecast.Msg.OnLocationPermissionResult.GrantStatus.GRANTED
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION).not() -> {
+                    Forecast.Msg.OnLocationPermissionResult.GrantStatus.REQUEST_DENIED
+                }
+                else -> {
+                    Forecast.Msg.OnLocationPermissionResult.GrantStatus.DENIED
+                }
             }
             feature.accept(Forecast.Msg.OnLocationPermissionResult(grantStatus))
         }
@@ -98,14 +105,9 @@ class ForecastFragment : Fragment() {
                     )
                 )
             }
-            shouldShowRequestPermissionRationale(permission).not() -> {
-                feature.accept(
-                    Forecast.Msg.OnLocationPermissionResult(
-                        Forecast.Msg.OnLocationPermissionResult.GrantStatus.REQUEST_DENIED
-                    )
-                )
+            else -> {
+                requestLocationPermissionLauncher.launch(permission)
             }
-            else -> requestLocationPermissionLauncher.launch(permission)
         }
     }
 

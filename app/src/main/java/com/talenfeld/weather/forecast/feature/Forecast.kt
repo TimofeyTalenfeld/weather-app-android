@@ -1,6 +1,7 @@
 package com.talenfeld.weather.forecast.feature
 
 import com.talenfeld.weather.core.feature.Feature
+import com.talenfeld.weather.main.data.model.ForecastCompilation
 import com.talenfeld.weather.main.data.model.ForecastResult
 import com.talenfeld.weather.main.data.model.Region
 
@@ -18,7 +19,7 @@ object Forecast {
         object OnLoadingFailed: Msg()
 
         class OnForecastLoaded(
-            val forecastResult: ForecastResult,
+            val forecast: ForecastCompilation,
             val region: Region
         ): Msg()
     }
@@ -44,7 +45,7 @@ object Forecast {
 
         data class Loaded(
             val region: Region,
-            val forecastResult: ForecastResult
+            val forecast: ForecastCompilation
         ): State()
     }
 
@@ -93,5 +94,5 @@ object Forecast {
         State.Error(State.Error.Cause.LOADING_FAILED) to emptySet()
 
     private fun onForecastLoaded(msg: Msg.OnForecastLoaded): Pair<State, Set<Eff>> =
-        State.Loaded(msg.region, msg.forecastResult) to emptySet()
+        State.Loaded(msg.region, msg.forecast) to emptySet()
 }

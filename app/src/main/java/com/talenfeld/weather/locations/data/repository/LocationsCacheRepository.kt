@@ -27,6 +27,10 @@ class MockLocationsCacheRepository: CacheRepository<List<Region>> {
                 name = "Stockholm",
                 location = Location(59.334591, 18.063240)
             ),
+            Region(
+                name = "Saint-Petersburg",
+                location = Location(59.937500, 30.308611)
+            )
         )
     }
 }

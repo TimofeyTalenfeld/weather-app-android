@@ -3,7 +3,7 @@ package com.talenfeld.weather.locations.feature
 import com.talenfeld.weather.core.feature.AsyncEffectHandler
 import com.talenfeld.weather.core.feature.Disposable
 import com.talenfeld.weather.core.feature.toEffectHandlerDisposable
-import com.talenfeld.weather.locations.LocationsInteractor
+import com.talenfeld.weather.locations.data.interactor.LocationsInteractor
 
 class LocationsDataEffectHandler(
     private val locationsInteractor: LocationsInteractor

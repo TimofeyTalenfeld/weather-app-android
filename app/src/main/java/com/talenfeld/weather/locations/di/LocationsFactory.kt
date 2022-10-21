@@ -6,7 +6,7 @@ import com.talenfeld.weather.core.di.FeatureFactory
 import com.talenfeld.weather.core.feature.SimpleFeature
 import com.talenfeld.weather.core.feature.effectHandler
 import com.talenfeld.weather.forecast.data.repository.ForecastByLocations
-import com.talenfeld.weather.locations.LocationsInteractor
+import com.talenfeld.weather.locations.data.interactor.LocationsInteractor
 import com.talenfeld.weather.locations.data.repository.MockLocationsCacheRepository
 import com.talenfeld.weather.locations.feature.Locations
 import com.talenfeld.weather.locations.feature.LocationsDataEffectHandler

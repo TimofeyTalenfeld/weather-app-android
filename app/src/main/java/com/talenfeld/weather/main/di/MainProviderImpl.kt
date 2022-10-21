@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.talenfeld.weather.core.data.repository.CacheRepository
 import com.talenfeld.weather.core.navigation.Navigator
+import com.talenfeld.weather.forecast.data.repository.CurrentLocationForecastCacheRepository
 import com.talenfeld.weather.forecast.data.repository.ForecastByLocations
 import com.talenfeld.weather.forecast.data.repository.ForecastCacheRepository
 import com.talenfeld.weather.main.data.api.AccessKeyInterceptor
 import com.talenfeld.weather.main.data.api.ForecastApi
 import com.talenfeld.weather.main.data.api.GeocodingApi
 import com.talenfeld.weather.main.data.api.configureApi
+import com.talenfeld.weather.main.data.model.ForecastCompilation
+import com.talenfeld.weather.main.data.model.Region
 import com.talenfeld.weather.main.data.repository.*
 import kotlinx.serialization.json.Json
 
@@ -18,6 +21,8 @@ class MainProviderImpl(
     override val navigator: Navigator,
     sharedPreferences: SharedPreferences
 ): MainProvider {
+
+    private val json = Json
 
     override val geocodingApi: GeocodingApi by lazy {
         configureApi(
@@ -48,7 +53,14 @@ class MainProviderImpl(
     override val forecastCacheRepository: CacheRepository<ForecastByLocations> by lazy {
         ForecastCacheRepository(
             sharedPreferences = sharedPreferences,
-            json = Json
+            json = json
+        )
+    }
+
+    override val currentLocationForecastRepository: CacheRepository<Pair<Region, ForecastCompilation>> by lazy {
+        CurrentLocationForecastCacheRepository(
+            sharedPreferences = sharedPreferences,
+            json = json
         )
     }
 

@@ -2,8 +2,8 @@ package com.talenfeld.weather.core.feature
 
 import com.talenfeld.weather.core.util.backgroundToUi
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
-
 
 interface EffectHandler<Effect, Msg>: Disposable {
     fun subscribe(listener: (Msg) -> Unit)
@@ -81,6 +81,17 @@ private class EffectWrapper<Msg : Any, State : Any, Effect : Any>(
 }
 
 fun <Msg: Any> Single<Msg>.toEffectHandlerDisposable(
+    listener: (Msg) -> Unit
+): Disposable = object : Disposable {
+
+    val delegateDisposable = backgroundToUi().subscribe(listener)
+
+    override fun dispose() {
+        delegateDisposable.dispose()
+    }
+}
+
+fun <Msg: Any> Observable<Msg>.toEffectHandlerDisposable(
     listener: (Msg) -> Unit
 ): Disposable = object : Disposable {
 

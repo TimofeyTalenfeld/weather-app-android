@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/title"
+    style="@style/TextAppearance.MaterialComponents.Headline6"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_padding"
+    android:drawablePadding="@dimen/default_half_padding"
+    tools:text="Title"
+    tools:drawableStart="@drawable/ic_location" />

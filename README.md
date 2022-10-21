@@ -11,7 +11,7 @@ Download [apk](https://github.com/TimofeyTalenfeld/weather-app-android/raw/main/
 
 **Architecture**
 
-Used MVI architecture called TEA (the Elm Architecture). It's simple MVI realization based on state machine behavior.
+Used MVI architecture called TEA (the Elm Architecture). It's simple MVI realization based on state machine behavior
 
 **Network**
 
@@ -19,4 +19,12 @@ Used Retrofit + KotlinX Serialization
 
 **DI**
 
-Used self-written components, as TEA suppose you to create components on short way and side frameworks are not needed.
+Used self-written components, as TEA suppose you to create components on short way and side frameworks are not needed
+
+**Navigation**
+
+Based on Cicerone idea but minified
+
+**RecyclerView**
+
+Used RecyclerView-Driven-UI with custom DelegateAdapters

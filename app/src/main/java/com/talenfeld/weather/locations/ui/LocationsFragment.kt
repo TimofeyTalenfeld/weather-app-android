@@ -50,6 +50,16 @@ class LocationsFragment: BottomSheetDialogFragment() {
         setupRecycler(binding.content)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        components.locationsRef.dispose()
+    }
+
     private fun renderState(state: Locations.State) {
         val viewModel = featureFactory.viewModelFactory.create(state)
         diffAdapter.swapData(viewModel.items)

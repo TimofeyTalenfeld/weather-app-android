@@ -91,6 +91,11 @@ class ForecastFragment : Fragment() {
         _binding = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        components.forecastRef.dispose()
+    }
+
     private fun renderState(state: Forecast.State) {
         val viewModel = featureFactory.viewModelFactory.create(state)
         diffAdapter.swapData(viewModel.listItems)

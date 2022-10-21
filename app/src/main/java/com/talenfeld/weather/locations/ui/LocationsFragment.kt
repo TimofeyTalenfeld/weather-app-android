@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.talenfeld.weather.core.di.components
 import com.talenfeld.weather.core.feature.bindFeature
+import com.talenfeld.weather.core.ui.adapter.ButtonAdapter
 import com.talenfeld.weather.core.ui.adapter.LoadingAdapter
+import com.talenfeld.weather.core.ui.adapter.TitleAdapter
 import com.talenfeld.weather.core.ui.adapter.base.DiffAdapter
 import com.talenfeld.weather.databinding.FragmentLocationsBinding
 import com.talenfeld.weather.locations.di.LocationsFactory
@@ -26,7 +28,9 @@ class LocationsFragment: BottomSheetDialogFragment() {
 
     private val diffAdapter = DiffAdapter(
         LoadingAdapter(),
-        LocationAdapter()
+        LocationAdapter(),
+        TitleAdapter(),
+        ButtonAdapter({})
     )
 
     init {

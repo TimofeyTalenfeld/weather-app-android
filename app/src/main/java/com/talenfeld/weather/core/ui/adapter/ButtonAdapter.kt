@@ -4,23 +4,29 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.talenfeld.weather.core.ui.ComparableItem
 import com.talenfeld.weather.core.ui.adapter.base.SimpleDelegateAdapter
-import com.talenfeld.weather.databinding.ItemTitleBinding
+import com.talenfeld.weather.databinding.ItemButtonBinding
 
-data class TitleViewModel(
-    val title: String
+data class ButtonViewModel(
+    val id: String,
+    val text: String
 ): ComparableItem {
-    override fun id(): Any = title
+    override fun id(): Any = id
 
     override fun content(): Any = this
 }
 
-class TitleAdapter: SimpleDelegateAdapter<TitleViewModel, ItemTitleBinding>(TitleViewModel::class.java) {
+class ButtonAdapter(
+    private val onClicked: (ButtonViewModel) -> Unit
+): SimpleDelegateAdapter<ButtonViewModel, ItemButtonBinding>(ButtonViewModel::class.java) {
     override fun createViewBinding(
         layoutInflater: LayoutInflater,
         parent: ViewGroup
-    ): ItemTitleBinding = ItemTitleBinding.inflate(layoutInflater, parent, false)
+    ): ItemButtonBinding = ItemButtonBinding.inflate(layoutInflater, parent, false)
 
-    override fun bind(item: TitleViewModel, binding: ItemTitleBinding) {
-        binding.title.text = item.title
+    override fun bind(item: ButtonViewModel, binding: ItemButtonBinding) {
+        binding.button.run {
+            text = item.text
+            setOnClickListener { onClicked(item) }
+        }
     }
 }

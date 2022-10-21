@@ -16,6 +16,9 @@
     <string name="hour_time_1d">%d:00</string>
     <string name="unknown_temperature">--</string>
 
+    <string name="locations">Locations</string>
+    <string name="add_location">Add location</string>
+
     <string-array name="day_of_week">
         <item>Monday</item>
         <item>Tuesday</item>

@@ -7,6 +7,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/default_padding"
-    android:drawablePadding="@dimen/default_half_padding"
-    tools:text="Title"
-    tools:drawableStart="@drawable/ic_location" />
+    tools:text="Title" />
